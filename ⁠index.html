@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بطاقة تهنئة المعايدة</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            background-color: #f4f6f9;
+            padding: 40px 15px;
+            margin: 0;
+        }
+        .container {
+            max-width: 550px;
+            margin: auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        h2 { 
+            color: #2c3e50; 
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        p { 
+            color: #7f8c8d; 
+            font-size: 15px;
+            line-height: 1.6; 
+            margin-bottom: 25px;
+        }
+        input[type="text"] {
+            width: 85%;
+            padding: 14px;
+            margin-bottom: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            text-align: center;
+            outline: none;
+            transition: 0.3s;
+        }
+        input[type="text"]:focus {
+            border-color: #3498db;
+        }
+        button {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 85%;
+        }
+        button:hover { 
+            background-color: #2ecc71; 
+        }
+        #resultImage {
+            max-width: 100%;
+            margin-top: 25px;
+            border-radius: 10px;
+            display: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .download-btn {
+            display: none;
+            background-color: #2980b9;
+            color: white;
+            text-decoration: none;
+            padding: 14px 35px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 10px;
+            margin-top: 20px;
+            width: 73%;
+            text-align: center;
+        }
+        .download-btn:hover {
+            background-color: #3498db;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>انتماؤك يبدأ من هنا ..</h2>
+        <p>اكتب اسمك واصنع بطاقتك .. شاركها مع زملائك وأهلك لنجعل معايداتنا بتوقيعنا جميعًا.</p>
+        
+        <input type="text" id="nameInput" placeholder="أدخل اسمك الكريم هنا...">
+        <br>
+        <button onclick="generateCard()">إنشاء البطاقة</button>
+
+        <canvas id="cardCanvas" style="display:none;"></canvas>
+        
+        <img id="resultImage" alt="بطاقة التهنئة الخاصة بك">
+        <br>
+        <a id="downloadLink" class="download-btn" download="GreetingCard.jpg">تحميل البطاقة</a>
+    </div>
+
+    <script>
+        function generateCard() {
+            const name = document.getElementById('nameInput').value.trim();
+            if(!name) {
+                alert("الرجاء كتابة اسمك أولاً!");
+                return;
+            }
+
+            const canvas = document.getElementById('cardCanvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+
+            // يفترض وجود صورة باسم card.jpg في نفس المجلد
+            img.src = 'card.jpg'; 
+            img.crossOrigin = "Anonymous"; 
+
+            img.onload = function() {
+                // تعيين الأبعاد بناء على حجم الصورة الأصلية بدقة
+                canvas.width = img.width;
+                canvas.height = img.height;
+                
+                // رسم الخلفية (البطاقة الفارغة)
+                ctx.drawImage(img, 0, 0);
+
+                // إعدادات خط وحجم ولون الاسم
+                ctx.font = 'bold 55px Arial';
+                ctx.fillStyle = '#2c3e50'; 
+                ctx.textAlign = 'center';
+
+                // كتابة الاسم في المنتصف أفقياً، والارتفاع 800 (يمكن تعديله لاحقاً حسب الفراغ في تصميمك)
+                ctx.fillText(name, canvas.width / 2, 800); 
+
+                // إخراج الصورة النهائية وعرضها للمستخدم لتسهيل الحفظ والتنزيل
+                const resultImg = document.getElementById('resultImage');
+                const finalDataUrl = canvas.toDataURL('image/jpeg', 0.95);
+                resultImg.src = finalDataUrl;
+                resultImg.style.display = 'inline-block';
+
+                // تجهيز رابط زر التحميل المباشر
+                const downloadLink = document.getElementById('downloadLink');
+                downloadLink.href = finalDataUrl;
+                downloadLink.style.display = 'inline-block';
+            }
+        }
+    </script>
+</body>
+</html>
